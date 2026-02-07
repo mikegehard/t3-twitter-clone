@@ -1,0 +1,7 @@
+{
+  "name": "CI Environment",
+  "build": {
+    "dockerfile": "../../project-container/Dockerfile"
+  },
+  "remoteUser": "agentDeveloper"
+}
