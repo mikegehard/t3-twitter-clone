@@ -51,9 +51,9 @@ export function authOptions(update?: boolean): NextAuthOptions {
         let success = false;
         let body = {};
         if (!p.credentials) {
-          let provider = p.account?.provider;
-          let username = p.user.name?.replace(/\s/g, "")
-          let email = p.user.email;
+          const provider = p.account?.provider;
+          const username = p.user.name?.replace(/\s/g, "")
+          const email = p.user.email;
           body = {
             provider,
             username,
@@ -68,25 +68,27 @@ export function authOptions(update?: boolean): NextAuthOptions {
           };
         }
         try {
-          // @ts-ignore
-          let createUser = await client.user.createUser.mutate({ ...body });
+          // @ts-expect-error - dynamic tRPC client types
+          const createUser = await client.user.createUser.mutate({ ...body });
           success = createUser.success;
-          let userData = createUser.data;
+          const userData = createUser.data;
           if (typeof createUser.data === "string") {
             throw new Error(createUser.data);
           }
-          // @ts-ignore
+          // @ts-expect-error - dynamic tRPC client types
           p.user.userData = userData;
-        } catch (e: any) {}
+        } catch (_e: unknown) {
+          // authentication failed, success remains false
+        }
         return success;
       },
 
       async jwt(p) {
         if (update) {
-          let { user } = await client.user.getUser.query({
+          const { user } = await client.user.getUser.query({
             id: p.token.userData.id,
           });
-          //@ts-ignore
+          // @ts-expect-error - augmented session types
           p.token.userData = user;
         } else {
           p.token.userData = p.user?.userData || p.token.userData;
@@ -96,10 +98,10 @@ export function authOptions(update?: boolean): NextAuthOptions {
       },
       async session(p) {
         if (update) {
-          let { user } = await client.user.getUser.query({
+          const { user } = await client.user.getUser.query({
             id: p.token.userData.id,
           });
-          //@ts-ignore
+          // @ts-expect-error - augmented session types
           p.session.userData = user;
         } else {
           p.session.userData = p.token.userData;
@@ -110,13 +112,13 @@ export function authOptions(update?: boolean): NextAuthOptions {
     providers: getProviders(),
     jwt: {
       async encode(p) {
-        let token = jwt.sign(p.token!, p.secret);
+        const token = jwt.sign(p.token ?? {}, p.secret);
         return token;
       },
-      // @ts-ignore
+      // @ts-expect-error - dynamic tRPC client types
       async decode(p) {
-        // @ts-ignore
-        let decoded = jwt.verify(p.token, p.secret);
+        // @ts-expect-error - dynamic tRPC client types
+        const decoded = jwt.verify(p.token, p.secret);
         return decoded;
       },
     },
@@ -131,16 +133,16 @@ export const getServerAuthSession = (ctx: {
 function getProviders() {
   return [
     GithubProvider({
-      clientId: process.env.GITHUB_ID!,
-      clientSecret: process.env.GITHUB_SECRET!,
+      clientId: process.env.GITHUB_ID ?? "",
+      clientSecret: process.env.GITHUB_SECRET ?? "",
     }),
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: process.env.GOOGLE_CLIENT_ID ?? "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
     }),
     DiscordProvider({
-      clientId: process.env.DISCORD_CLIENT_ID!,
-      clientSecret: process.env.DISCORD_CLIENT_SECRET!,
+      clientId: process.env.DISCORD_CLIENT_ID ?? "",
+      clientSecret: process.env.DISCORD_CLIENT_SECRET ?? "",
     }),
     CredentialsProvider({
       id: "credentials",
@@ -164,10 +166,10 @@ function getProviders() {
             password: credentials.password,
           };
         }
-        // @ts-ignore
-        let createUser = await client.user.createUser.mutate({ ...body });
-        // @ts-ignore
-        let userData: User = { userData: createUser.data };
+        // @ts-expect-error - dynamic tRPC client types
+        const createUser = await client.user.createUser.mutate({ ...body });
+        // @ts-expect-error - dynamic tRPC client types
+        const userData: User = { userData: createUser.data };
         if (typeof createUser.data === "string") {
           throw new Error(createUser.data);
         }
@@ -178,7 +180,7 @@ function getProviders() {
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  // @ts-ignore
+  // @ts-expect-error - dynamic tRPC client types
   return await NextAuth(req, res, authOptions(req?.query?.update));
 };
 export default handler;

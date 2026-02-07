@@ -1,25 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { TweetInput } from "@components/inputs/TweetInput";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { trpc } from "@utils/trpc";
 import { Spinner } from "@components/Spinner";
-import { NewTweets } from "@components/NewTweets";
 import { PageHead } from "@components/PageHead";
-import MainTweet from "@components/MainTweet";
-import Avatar from "@components/Avatar";
-import { PickVerificationIcon } from "@components/PickVerificationIcon";
-import NextLink from "@components/NextLink";
 import MainButton from "@components/MainButton";
+
+type SettingsInputs = {
+  username: string;
+};
 
 export default function SettingsContent() {
   const {
     register,
-    handleSubmit,
-    watch,
-    reset,
-    formState: { errors },
-  } = useForm<any>();
-  let allTweets = trpc.tweet.getAllTweets.useQuery({ id: "anysddssdss" });
+  } = useForm<SettingsInputs>();
+  const allTweets = trpc.tweet.getAllTweets.useMutation();
   const [tweets, setTweets] = useState(allTweets.data?.tweets);
   console.log("tweetssss", tweets, allTweets.data);
   useEffect(() => {

@@ -1,19 +1,10 @@
 import { ReplyInput } from "@components/inputs/ReplyInput";
-import { TweetInput } from "@components/inputs/TweetInput";
-import  Avatar  from "@components/Avatar";
 import { Dialog, Transition } from "@headlessui/react";
-import { signIn } from "next-auth/react";
 import { Fragment } from "react";
 
-import { useForm, SubmitHandler } from "react-hook-form";
 import { TweetProps } from "@types";
-import MainTweet from "@components/MainTweet";
 import { TweetReply } from "@components/TweetReply";
 
-type Inputs = {
-    username: string;
-    password: string;
-};
 export default function ReplyModal({
     isOpen,
     closeModal,
@@ -21,8 +12,8 @@ export default function ReplyModal({
     tweet,
 }: {
     isOpen: boolean;
-    closeModal: any;
-    onReply: any;
+    closeModal: () => void;
+    onReply: (body: string) => void;
     tweet: TweetProps;
 }) {
     return (

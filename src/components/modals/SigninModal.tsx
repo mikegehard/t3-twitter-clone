@@ -17,14 +17,12 @@ export default function SigninModal({
     closeModal,
 }: {
     isOpen: boolean;
-    closeModal: any;
+    closeModal: () => void;
 }) {
     const {
         register,
         handleSubmit,
-        watch,
         reset,
-        formState: { errors },
     } = useForm<Inputs>();
 
     const onSubmit: SubmitHandler<Inputs> = (data) => {
@@ -126,7 +124,7 @@ export default function SigninModal({
         </>
     );
 }
-let providers = [
+const providers = [
     {
         provider: "github",
         providerText: "Github",
@@ -150,7 +148,7 @@ function SigninBtn({
     provider,
     providerText,
 }: {
-    onClick: any;
+    onClick: (provider: string) => void;
     provider: string;
     providerText: string;
     icon: React.ReactNode;

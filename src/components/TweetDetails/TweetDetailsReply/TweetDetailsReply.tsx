@@ -2,7 +2,6 @@ import React from "react";
 
 import type { Variants } from "framer-motion";
 import { TweetMetadata } from "./TweetMetadata";
-import Link from "next/link";
 import NextLink from "@components/NextLink";
 import Avatar from "@components/Avatar";
 import { TweetProps } from "@types";
@@ -27,14 +26,14 @@ export function TweetDetailsReply({
       <div className="tweet-hover main-border border-b mb-2 ">
         <div className="fade-in flex   cursor-pointer space-x-2  transition-all  ease-in-out">
           <div className=" flex min-h-full flex-col items-center ">
-            <Avatar avatarImage={tweet.user.profileImage!} />
+            <Avatar avatarImage={tweet.user.profileImage ?? ""} />
             {reply && (
               <div className="hover-animation  bg-line-reply dark:bg-dark-line-reply  h-[80%] w-0.5"></div>
             )}
           </div>
           <div className="flex w-full grow flex-col">
             <NextLink href={`/${tweet.user.username}`}>
-              <TweetMetadata color={tweet.user.badge!} {...tweet} />
+              <TweetMetadata color={tweet.user.badge ?? undefined} {...tweet} />
             </NextLink>
             <Body {...tweet} />
             <TweetActions allDisabled {...tweet} />

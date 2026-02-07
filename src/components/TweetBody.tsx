@@ -8,7 +8,7 @@ const formatText = (text:string) => {
   const formattedWords = words.map((word, index) => {
     if (word.includes('@') || word.includes('#')) {
       // Check if the previous character was a new line or the beginning of the string
-      const isStartOfLine = index === 0 || /\n/.test(words[index-1]);
+      const isStartOfLine = index === 0 || /\n/.test(words[index-1] ?? "");
       const blueClass = isStartOfLine ? "text-blue-500" : "";
       return <span className={blueClass}>{word} </span>;
     } else {

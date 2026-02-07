@@ -1,7 +1,7 @@
 import { useEventContext } from "@context/EventContext";
 import { useEffect, useState } from "react";
 
-export function registerListener(id: string, callback: (data: any) => void) {
+export function registerListener(id: string, callback: (data: unknown) => void) {
   const { registerListener, unregisterListener } = useEventContext();
   const [registered, setRegistered] = useState(false);
 

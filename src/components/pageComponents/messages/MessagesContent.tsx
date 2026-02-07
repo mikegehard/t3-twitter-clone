@@ -1,31 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
-import { TweetInput } from "@components/inputs/TweetInput";
+import React, { useEffect, useState } from "react";
 import { trpc } from "@utils/trpc";
 import { Spinner } from "@components/Spinner";
-import { NewTweets } from "@components/NewTweets";
 import { PageHead } from "@components/PageHead";
-import MainTweet from "@components/MainTweet";
 import Avatar from "@components/Avatar";
 import { PickVerificationIcon } from "@components/PickVerificationIcon";
-import NextLink from "@components/NextLink";
 
 export default function MessagesContent() {
-  let allTweets = trpc.tweet.getAllTweets.useQuery({ id: "anysddssdss" });
+  const allTweets = trpc.tweet.getAllTweets.useMutation();
   const [tweets, setTweets] = useState(allTweets.data?.tweets);
   console.log("tweetssss", tweets, allTweets.data);
   useEffect(() => {
     setTweets(allTweets.data?.tweets);
   }, [allTweets.data]);
 
-  function onPost(body: string) {
-    const newTweet = {
-      username: "new",
-      body,
-      name: "Test test",
-      id: Date.now(),
-    };
-    // setTweets([newTweet, ...tweets]);
-  }
   return (
     <div className="main-content ">
       <div className="main-border h-screen sm:w-[350px] border-b border-l border-r ">

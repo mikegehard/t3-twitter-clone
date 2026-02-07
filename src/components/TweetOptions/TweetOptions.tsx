@@ -2,7 +2,7 @@ import NextLink from "@components/NextLink";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 
-let bookmarked = false;
+const bookmarked = false;
 export default function TweetOptions({ id }: { id: string }) {
   function deleteTweet() {
     id;
@@ -92,7 +92,7 @@ export default function TweetOptions({ id }: { id: string }) {
   );
 }
 
-function BookmarkActiveIcon(props: any) {
+function BookmarkActiveIcon(_props: Record<string, unknown>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -110,7 +110,7 @@ function BookmarkActiveIcon(props: any) {
   );
 }
 
-function BookmarkIcon(props: any) {
+function BookmarkIcon(_props: Record<string, unknown>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -129,7 +129,7 @@ function BookmarkIcon(props: any) {
   );
 }
 
-function DeleteIcon(props: any) {
+function DeleteIcon(_props: Record<string, unknown>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

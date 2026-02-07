@@ -1,5 +1,5 @@
 import { getUserSession } from "@hooks/getUserSession";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Avatar from "@components/Avatar";
 import { NavItem } from "./NavItem";
 import { navItems } from "./navItems";
@@ -11,7 +11,6 @@ import { signOut } from "next-auth/react";
 import NextLink from "@components/NextLink";
 import { BlueVerified } from "@icons/verified";
 import { PickVerificationIcon } from "@components/PickVerificationIcon";
-import { trpc } from "@utils/trpc";
 
 export default function SidebarLeft({ active }: { active?: number }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,7 +22,7 @@ export default function SidebarLeft({ active }: { active?: number }) {
   function toggleModal2() {
     setIsOpen2(!isOpen2);
   }
-    let session=getUserSession()
+    const session=getUserSession()
   return (
     <>
       <TweetModal isOpen={isOpen} closeModal={toggleModal} />
@@ -61,8 +60,8 @@ export default function SidebarLeft({ active }: { active?: number }) {
 }
 
 function User() {
-  let session = getUserSession();
-  const [user, setUser] = useState(session);
+  const session = getUserSession();
+  const [user, _setUser] = useState(session);
   function logout() {
     signOut();
   }
@@ -74,14 +73,14 @@ function User() {
     >
       <NextLink href={"/" + user.username}>
         <div className="flex flex-row items-center">
-          <Avatar avatarImage={user.profileImage!} />
+          <Avatar avatarImage={user.profileImage ?? ""} />
           <div className="ml-2 hidden xl:block">
             <h1 className="flex text-sm font-bold text-gray-800 dark:text-white">
               <span className="truncate text-ellipsis ">
                 {" "}
                 {user.name||user.username}
               </span>
-              <PickVerificationIcon color={user.badge!} />
+              <PickVerificationIcon color={user.badge ?? undefined} />
             </h1>
             <p className="text-sm text-gray-400">@{user.username}</p>
           </div>

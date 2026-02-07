@@ -4,7 +4,7 @@ export function FilePreview({
     selectedFile, clearInputs,
 }: {
     selectedFile: string;
-    clearInputs: any;
+    clearInputs: () => void;
 }) {
     return (
         <>

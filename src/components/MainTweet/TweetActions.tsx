@@ -8,7 +8,6 @@ import ReplyIcon from "@icons/tweet/ReplyIcon";
 import RetweetIcon from "@icons/tweet/RetweetIcon";
 import LikeIcon from "@icons/tweet/LikeIcon";
 import ShareIcon from "@icons/tweet/ShareIcon";
-import NextLink from "@components/NextLink";
 import { Counter } from "./Counter";
 import { getUserSession } from "@hooks/getUserSession";
 
@@ -16,8 +15,8 @@ export function TweetActions({
   allDisabled,
   ...props
 }: TweetProps & { allDisabled?: boolean }) {
-  let [isOpen, setIsOpen] = useState(false);
-  let userId = getUserSession().id!;
+  const [isOpen, setIsOpen] = useState(false);
+  const userId = getUserSession().id ?? "";
   const [buttons, setButtons] = useState<ActionButtonProps[]>([
     {
       id: "reply",
@@ -65,28 +64,28 @@ export function TweetActions({
     setIsOpen(false);
   }
 
-  let { data } = useSession();
-  let likeTweet = trpc.tweet.likeTweet.useMutation();
-  let replyTweet = trpc.tweet.replyTweet.useMutation();
-  let reTweet0 = trpc.tweet.reTweet.useMutation();
+  const { data: _data } = useSession();
+  const likeTweet = trpc.tweet.likeTweet.useMutation();
+  const replyTweet = trpc.tweet.replyTweet.useMutation();
+  const reTweet0 = trpc.tweet.reTweet.useMutation();
   function interact(id: ToInteract, inc: boolean) {
-    let newBtns = buttons;
+    const newBtns = buttons;
     newBtns.forEach((b) => {
       if (b.id === id) {
-        (b.count || b.count === 0) && inc ? b.count++ : b.count!--;
+        if ((b.count || b.count === 0) && inc) { b.count++; } else if (b.count) { b.count--; }
         b.active = inc;
       }
     });
     setButtons(newBtns);
   }
   function like() {
-    let result = likeTweet.mutate({ id: props.id });
-    let toInteract: ToInteract = "like";
-    let inc = buttons.find((b) => b.id === "like");
+    likeTweet.mutate({ id: props.id });
+    const toInteract: ToInteract = "like";
+    const inc = buttons.find((b) => b.id === "like");
     interact(toInteract, !inc?.active);
   }
   function reply(body: string) {
-    let toInteract: ToInteract = "reply";
+    const toInteract: ToInteract = "reply";
     interact(toInteract, true);
     toggleModal();
     replyTweet.mutate({ id: props.id, body });
@@ -95,10 +94,10 @@ export function TweetActions({
     setIsOpen(!isOpen);
   }
   function reTweet() {
-    let result = reTweet0.mutate({ id: props.id });
+    reTweet0.mutate({ id: props.id });
 
-    let toInteract: ToInteract = "retweet";
-    let inc = buttons.find((b) => b.id === toInteract)?.active!;
+    const toInteract: ToInteract = "retweet";
+    const inc = buttons.find((b) => b.id === toInteract)?.active ?? false;
     interact(toInteract, !inc);
   }
 
@@ -112,7 +111,7 @@ export function TweetActions({
   }
   useEffect(() => {
     // Update interactionState
-    let state = interactionState(props, userId);
+    const state = interactionState(props, userId);
     setButtons((prevButtons) =>
       prevButtons.map((button) => {
         if (button.id === "like") {
@@ -139,7 +138,7 @@ export function TweetActions({
       })
     );
   }, [props.likes, props.retweets, props.replies, userId]);
-  if (buttons[2].active === null) return <></>;
+  if (buttons[2]?.active === null) return <></>;
   return (
     <div onClick={(e) => e.preventDefault()}>
       <ReplyModal
@@ -188,13 +187,13 @@ function ActionButton({
         icon
       )}
 
-      <Counter num={count!} />
+      <Counter num={count ?? 0} />
     </div>
   );
 }
 type ToInteract = "like" | "retweet" | "reply" | "share";
 type ActionButtonProps = {
-  onClick?: () => any;
+  onClick?: () => void;
   id?: ToInteract;
   activeClassName?: string;
   count?: number;

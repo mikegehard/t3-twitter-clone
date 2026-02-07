@@ -1,36 +1,15 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { signIn } from "next-auth/react";
 import { Fragment } from "react";
 
-import { useForm, SubmitHandler } from "react-hook-form";
-import { TweetInput } from "@components/inputs/TweetInput";
 import VerifiedDropdown from "./VerifiedDropdown";
-import MainButton from "@components/MainButton";
 
-type Inputs = {
-    username: string;
-    password: string;
-};
 export default function VerifiedModal({
     isOpen,
     closeModal,
 }: {
     isOpen: boolean;
-    closeModal: any;
+    closeModal: () => void;
 }) {
-    const {
-        register,
-        handleSubmit,
-        watch,
-        reset,
-        formState: { errors },
-    } = useForm<Inputs>();
-
-    const onSubmit: SubmitHandler<Inputs> = (data) => {
-        console.log("cred data", data);
-        signIn("credentials", { ...data });
-        reset();
-    };
     return (
         <>
             <Transition appear show={isOpen} as={Fragment}>

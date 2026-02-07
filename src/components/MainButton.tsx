@@ -5,7 +5,7 @@ export default function MainButton({
     text,
     textClassname,
     ...props
-}: { text: string; textClassname?: string } & ButtonHTMLAttributes<any>) {
+}: { text: string; textClassname?: string } & ButtonHTMLAttributes<HTMLButtonElement>) {
     return (
         <button
             tabIndex={-1}

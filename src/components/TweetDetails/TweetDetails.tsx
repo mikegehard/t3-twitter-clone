@@ -4,7 +4,6 @@ import type { Tweet, User, Like, Retweet, Reply } from "@prisma/client";
 import type { Variants } from "framer-motion";
 import { Avatar } from "./Avatar";
 import ReactTextareaAutosize from "react-textarea-autosize";
-import { TweetReply } from "@components/TweetReply";
 import MainButton from "@components/MainButton";
 import { Body } from "@components/MainTweet/Body";
 import { TweetDetailsMetaData } from "./TweetDetailsMetaData";
@@ -35,19 +34,19 @@ export function TweetDetails({
   reply?: boolean;
   tweet: TweetProps;
 }) {
-  const { register, handleSubmit, watch, reset } = useForm<Inputs>();
-  let replyTweet = trpc.tweet.replyTweet.useMutation();
+  const { register, handleSubmit, reset } = useForm<Inputs>();
+  const replyTweet = trpc.tweet.replyTweet.useMutation();
   const [tweetReplies, setTweetReplies] = useState(tweet.replies);
-  let session = getUserSession();
+  const session = getUserSession();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    let res = await replyTweet.mutateAsync({ id: tweet.id, body: data.body });
+    const res = await replyTweet.mutateAsync({ id: tweet.id, body: data.body });
     setTweetReplies([res.reply, ...tweetReplies]);
     reset();
   };
   return (
     <div className="fade-in flex flex-col px-4   transition-all  ease-in-out">
-      <TweetDetailsMetaData tweet={tweet} reply={reply!} />
+      <TweetDetailsMetaData tweet={tweet} reply={reply ?? false} />
       <div className="ml-1 mt-1">
         <Body {...tweet} />
       </div>
@@ -60,7 +59,7 @@ export function TweetDetails({
 
         <div className="main-border flex items-center gap-6 border-b pb-5 ">
           <div className="">
-            <Avatar avatarImage={session.profileImage!} />
+            <Avatar avatarImage={session.profileImage ?? ""} />
           </div>
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -80,7 +79,7 @@ export function TweetDetails({
         </div>
         <div className="flex flex-col ">
           {tweetReplies.map((t) => (
-            <TweetDetailsReply tweet={t} />
+            <TweetDetailsReply key={t.id} tweet={t as unknown as TweetProps} />
           ))}
         </div>
       </div>

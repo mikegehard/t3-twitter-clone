@@ -1,7 +1,7 @@
 import { formatDate } from "@utils/date";
 
 export function Joined({ date }: { date: Date }) {
-    let formattedDate = formatDate(date)
+    const formattedDate = formatDate(date)
     return (
         <span className="mr-2 flex">
             <svg viewBox="0 0 24 24" className="paint-icon fill-white h-5 w-5">

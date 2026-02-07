@@ -6,7 +6,7 @@ export function removeProperties<T>(obj: T, toRemove?: string[]): T {
     return obj as T;
   }
 
-  const newObj: any = Array.isArray(obj) ? [] : {};
+  const newObj: Record<string, unknown> = Array.isArray(obj) ? ([] as unknown as Record<string, unknown>) : {};
 
   for (const [key, value] of Object.entries(obj)) {
     if (toRemove.includes(key)) {

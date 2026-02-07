@@ -1,14 +1,14 @@
 import { z } from "zod";
 import { protectedProcedure, publicProcedure } from "../../../trpc/trpc";
 import _ from "lodash";
-import { TO_REMOVE } from "../../../utils/TO_REMOVE";
+
 import { removeProperties } from "../../../utils/removeProperties";
 
 export const getAllTweets = protectedProcedure
   .input(z.object({ skip: z.number().nullish() }))
   .mutation(async ({ ctx, input }) => {
     const pageSize = 10;
-    let tweets = await ctx.prisma.tweet.findMany({
+    const tweets = await ctx.prisma.tweet.findMany({
       orderBy: { createdAt: "desc" },
       include: {
         user: true,
@@ -30,7 +30,7 @@ export const getAllTweets = protectedProcedure
 export const getTweet = publicProcedure
   .input(z.object({ id: z.string().uuid() }))
   .query(async ({ ctx, input }) => {
-    let tweet = await ctx.prisma.tweet.findUnique({
+    const tweet = await ctx.prisma.tweet.findUnique({
       where: { id: input.id },
       include: {
         user: true,

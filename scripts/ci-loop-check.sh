@@ -1,6 +1,5 @@
 #!/bin/bash
-# CI loop check: verify toolchain is present
-# Inner-loop checks and tests are added later
+# CI loop check: test-container + inner-loop checks
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -16,5 +15,8 @@ for cmd in node npm tsc eslint prisma; do
   fi
 done
 echo "Toolchain OK."
+
+echo "Running inner-loop checks..."
+"$SCRIPT_DIR/inner-loop-check.sh"
 
 echo "CI checks passed."

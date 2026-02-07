@@ -11,7 +11,7 @@ export function UserMetadata({
     username: string;
     name: string;
     profileImage: string;
-    badge: any;
+    badge?: string;
   };
 }) {
   return (

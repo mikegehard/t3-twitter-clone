@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import ReactTextareaAutosize from "react-textarea-autosize";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Avatar from "@components/Avatar";
-import { useSession } from "next-auth/react";
 import { trpc } from "@utils/trpc";
 import { OtherIcons } from "./OtherIcons";
 import { FilePreview } from "./FilePreview";
@@ -12,19 +11,16 @@ import { getUserSession } from "@hooks/getUserSession";
 type Inputs = {
   body: string;
 };
-export function TweetInput({ onPost }: { onPost?: any }) {
+export function TweetInput({ onPost }: { onPost?: (data: unknown) => void }) {
   const [isPosting, setIsPosting] = useState(false);
-  let session = getUserSession();
-  const [user, setUser] = useState(session);
+  const session = getUserSession();
+  const [user] = useState(session);
   const {
     register,
     handleSubmit,
-    watch,
     reset,
-    formState: { errors },
   } = useForm<Inputs>();
-  let { data } = useSession();
-  let newTweet = trpc.tweet.newTweet.useMutation();
+  const newTweet = trpc.tweet.newTweet.useMutation();
 
   const [selectedFile, setSelectedFile] = useState<string | null>();
   const onSubmit: SubmitHandler<Inputs> = (data) => {
@@ -50,8 +46,9 @@ export function TweetInput({ onPost }: { onPost?: any }) {
   ) {
     if (event.target.files && event.target.files.length > 0) {
       const selectedFile = event.target.files[0];
+      if (!selectedFile) return;
       //compress
-      let compressedFile = await compressFile(selectedFile, 0.7);
+      const compressedFile = await compressFile(selectedFile, 0.7);
       // Read the contents of the selected file
       console.log("imageee", compressedFile);
       const reader = new FileReader();
@@ -79,7 +76,7 @@ export function TweetInput({ onPost }: { onPost?: any }) {
       !newTweet.isError &&
       newTweet.data?.tweet
     ) {
-      onPost(newTweet.data.tweet);
+      if (onPost) onPost(newTweet.data.tweet);
       setIsPosting(false);
     }
   }, [isPosting, newTweet, onPost]);
@@ -91,7 +88,7 @@ export function TweetInput({ onPost }: { onPost?: any }) {
     >
       <div className="flex  flex-shrink-0 p-4 pb-0">
         <div className="">
-          <Avatar avatarImage={user.profileImage!} />
+          <Avatar avatarImage={user.profileImage ?? ""} />
         </div>
         <div className="w-full p-2">
           <ReactTextareaAutosize
@@ -100,7 +97,7 @@ export function TweetInput({ onPost }: { onPost?: any }) {
             placeholder="What's happening?"
             className="h-10 w-full resize-none border-0 bg-transparent text-gray-900 placeholder-gray-400  focus:outline-none dark:text-white"
           />
-          <FilePreview selectedFile={selectedFile!} clearInputs={clearInputs} />
+          <FilePreview selectedFile={selectedFile ?? ""} clearInputs={clearInputs} />
         </div>
       </div>
       <div className="items-top flex w-full p-2 pl-14 text-white">

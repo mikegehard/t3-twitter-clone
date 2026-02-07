@@ -5,7 +5,7 @@ import { removeProperties } from "../../../utils/removeProperties";
 export const getUserFollowers = protectedProcedure
   .input(z.object({ username: z.string() }))
   .query(async ({ ctx, input }) => {
-    let userFollowers = await ctx.prisma.user.findUnique({
+    const userFollowers = await ctx.prisma.user.findUnique({
       where: { username: input.username },
       include: {
         following: {

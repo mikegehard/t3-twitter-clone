@@ -1,10 +1,5 @@
 import React from "react";
 import * as Menubar from "@radix-ui/react-menubar";
-import {
-  CheckIcon,
-  ChevronRightIcon,
-  DotFilledIcon,
-} from "@radix-ui/react-icons";
 import { TweetMetadata } from "@components/TweetDetails/TweetMetadata";
 import { getUserSession } from "@hooks/getUserSession";
 import Avatar from "@components/Avatar";
@@ -12,14 +7,14 @@ import MainButton from "@components/MainButton";
 import { trpc } from "@utils/trpc";
 import updateSession from "@utils/updateSession";
 
-const COLORS: any[] = ["blue", "red", "gold", "gray"];
+const COLORS: string[] = ["blue", "red", "gold", "gray"];
 
-const VerifiedDropdown = ({ closeModal }: { closeModal: any }) => {
-  let session = getUserSession();
-  const [radioSelection, setRadioSelection] = React.useState<any>(
-    session.badge
+const VerifiedDropdown = ({ closeModal }: { closeModal: () => void }) => {
+  const session = getUserSession();
+  const [radioSelection, setRadioSelection] = React.useState<string>(
+    session.badge ?? ""
   );
-  let updateBadge = trpc.user.updateBadge.useMutation();
+  const updateBadge = trpc.user.updateBadge.useMutation();
   async function update() {
     updateBadge.mutateAsync({ badge: radioSelection });
     updateSession();
@@ -32,8 +27,8 @@ const VerifiedDropdown = ({ closeModal }: { closeModal: any }) => {
         <Menubar.Menu>
           <Menubar.Trigger className="outline-none">
             <div className="flex items-center gap-2">
-              <Avatar avatarImage={session.profileImage!} />
-              <TweetMetadata color={radioSelection!} user={{ ...session }} />
+              <Avatar avatarImage={session.profileImage ?? ""} />
+              <TweetMetadata color={radioSelection ?? ""} user={{ ...session }} />
             </div>
           </Menubar.Trigger>
           <Menubar.Portal className="">
@@ -56,7 +51,7 @@ const VerifiedDropdown = ({ closeModal }: { closeModal: any }) => {
                   >
                     <div className="flex cursor-pointer items-center gap-2 rounded-lg p-2 duration-200  hover:bg-gray-700">
                       <div className="">
-                        <Avatar avatarImage={session.profileImage!} />
+                        <Avatar avatarImage={session.profileImage ?? ""} />
                       </div>
                       <TweetMetadata color={item} user={{ ...session }} />
                     </div>

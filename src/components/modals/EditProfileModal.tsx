@@ -27,17 +27,14 @@ export default function EditProfileModal({
 }: {
   isOpen: boolean;
   closeModal: () => void;
-  onSave: any;
+  onSave: (user: User) => void;
   user: User;
 }) {
   const {
     register,
     handleSubmit,
-    watch,
-    reset,
-    formState: { errors },
   } = useForm<Inputs>();
-  let session = getUserSession();
+  const _session = getUserSession();
   const [profileImg, setProfileImg] = useState<string | null>();
   const [bgImg, setBgImg] = useState<string | null>();
 
@@ -57,8 +54,9 @@ export default function EditProfileModal({
   async function handleBgSelection(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files && event.target.files.length > 0) {
       const selectedFile = event.target.files[0];
+      if (!selectedFile) return;
       //compress
-      let compressedFile = await compressFile(selectedFile, 0.7);
+      const compressedFile = await compressFile(selectedFile, 0.7);
       // Read the contents of the selected file
       const reader = new FileReader();
       reader.readAsDataURL(compressedFile);
@@ -76,8 +74,9 @@ export default function EditProfileModal({
   ) {
     if (event.target.files && event.target.files.length > 0) {
       const selectedFile = event.target.files[0];
+      if (!selectedFile) return;
       //compress
-      let compressedFile = await compressFile(selectedFile, 0.7);
+      const compressedFile = await compressFile(selectedFile, 0.7);
       // Read the contents of the selected file
       const reader = new FileReader();
       reader.readAsDataURL(compressedFile);
@@ -91,11 +90,11 @@ export default function EditProfileModal({
     }
   }
 
-  let updateProfile = trpc.user.updateUser.useMutation();
-  let updateProfileImg = trpc.user.updateImg.useMutation();
+  const updateProfile = trpc.user.updateUser.useMutation();
+  const updateProfileImg = trpc.user.updateImg.useMutation();
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    let res = await updateProfile.mutateAsync({ ...data });
-    let resImg = await updateProfileImg.mutateAsync({ bgImg, profileImg });
+    const res = await updateProfile.mutateAsync({ ...data });
+    await updateProfileImg.mutateAsync({ bgImg, profileImg });
     onSave(res.user);
     await updateSession();
     closeModal();
@@ -140,7 +139,7 @@ export default function EditProfileModal({
                       <img
                         className="absolute  z-10 h-1/3 w-[90%] border-none object-cover  outline-none"
                         style={{ display: (!bgImg && "none") || "block" }}
-                        src={bgImg!}
+                        src={bgImg ?? ""}
                       />
                       <input
                         type="file"
@@ -160,10 +159,10 @@ export default function EditProfileModal({
                       <img
                         style={{ width: 56, height: 56 }}
                         className="absolute z-10 rounded-full border-none object-cover outline-none  "
-                        src={profileImg!}
+                        src={profileImg ?? ""}
                       />
                       <Avatar
-                        avatarImage={user.profileImage!}
+                        avatarImage={user.profileImage ?? ""}
                         className="absolute"
                       />
                       <div
@@ -184,7 +183,7 @@ export default function EditProfileModal({
                     <input
                       {...register("name", {
                         required: false,
-                        value: user.name!,
+                        value: user.name ?? "",
                       })}
                       type="text"
                       className="block w-full rounded border border-solid border-gray-300 bg-transparent p-3 text-lg font-normal text-black focus:border-blue-500   
@@ -202,7 +201,7 @@ export default function EditProfileModal({
                       placeholder="Username"
                     />*/}
                     <ReactTextareaAutosize
-                      {...register("bio", { required: false, value: user.bio! })}
+                      {...register("bio", { required: false, value: user.bio ?? "" })}
                       maxRows={9}
                       minRows={2}
                       placeholder="Bio"
@@ -212,7 +211,7 @@ export default function EditProfileModal({
                     <input
                       {...register("website", {
                         required: false,
-                        value: user.website!,
+                        value: user.website ?? "",
                       })}
                       type="text"
                       className="block w-full rounded border border-solid border-gray-300 bg-transparent p-3 text-lg font-normal text-black focus:border-blue-500   

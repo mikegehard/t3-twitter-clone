@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Spinner } from "@components/Spinner";
 import { trpc } from "@utils/trpc";
 import { PageHead } from "@components/PageHead";
 import MainButton from "@components/MainButton";
-import { TweetDetailsMetaData } from "@components/TweetDetails/TweetDetailsMetaData";
 import { UserMetadata } from "@components/UserMetadata/UserMetadata";
 import NextLink from "@components/NextLink";
 export default function FollowersContent({
@@ -13,19 +12,20 @@ export default function FollowersContent({
     username: string;
     showFollowers: boolean;
 }) {
-    let userFollowers = trpc.user.getUserFollowers.useQuery({ username });
+    const userFollowers = trpc.user.getUserFollowers.useQuery({ username });
+    const userFollowersData = userFollowers.data?.userFollowers;
     const [followers, setFollowers] = useState(
-        userFollowers.data?.userFollowers![
+        userFollowersData?.[
         showFollowers ? "followers" : "following"
         ]
     );
     useEffect(() => {
         setFollowers(
-            userFollowers.data?.userFollowers![
+            userFollowersData?.[
             showFollowers ? "followers" : "following"
             ]
         );
-    }, [userFollowers.data]);
+    }, [userFollowers.data, userFollowersData, showFollowers]);
     return (
         <div className="main-border h-screen border-b border-l border-r sm:w-[600px]">
             <PageHead backBtn name={showFollowers ? "Followers" : "Following"} />
@@ -35,18 +35,18 @@ export default function FollowersContent({
                     <div className="flex flex-col space-y-4 p-2">
                         {followers?.map((f) => (
                             <div key={f.id} className=" flex flex-col -space-y-2.5">
-                                            {/* @ts-ignore */}
+                                            {/* @ts-expect-error dynamic property access based on showFollowers */}
                                 <NextLink href={`/${f[showFollowers ? "following" : "follower"].username}`}>
                                     <div className=" flex ">
                                         <UserMetadata
-                                             // {/* @ts-ignore */}
+                                            // @ts-expect-error dynamic property access based on showFollowers
                                             user={{ ...f[showFollowers ? "following" : "follower"] }}
                                         />
                                         <MainButton className="ml-auto h-8 w-24" text="Profile" />
                                     </div>
                                 </NextLink>
                                 <p className="text-tweet ml-[65px] break-words">
-                                    {/* @ts-ignore */}
+                                    {/* @ts-expect-error dynamic property access based on showFollowers */}
                                     {f[showFollowers ? "following" : "follower"].bio}
                                 </p>
                             </div>

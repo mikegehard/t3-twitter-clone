@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { trpc } from "@utils/trpc";
 import { useSession } from "next-auth/react";
-import { TweetProps } from "./Tweet";
+import { TweetProps } from "@types";
+import type { Like, Retweet, Reply } from "@prisma/client";
 import ReplyModal from "@components/modals/ReplyModal";
 
 export function TweetActions(props: TweetProps) {
-    let [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     function closeModal() {
         setIsOpen(false);
     }
 
-    let { data } = useSession();
-    let likeTweet = trpc.tweet.likeTweet.useMutation();
-    let replyTweet = trpc.tweet.replyTweet.useMutation();
-    let reTweet0 = trpc.tweet.reTweet.useMutation();
+    const { data } = useSession();
+    const likeTweet = trpc.tweet.likeTweet.useMutation();
+    const _replyTweet = trpc.tweet.replyTweet.useMutation();
+    const reTweet0 = trpc.tweet.reTweet.useMutation();
     function like() {
-        let result = likeTweet.mutate({ id: props.id });
+        const result = likeTweet.mutate({ id: props.id });
         console.log("like", result);
     }
     function reply() {
@@ -24,7 +25,7 @@ export function TweetActions(props: TweetProps) {
         // console.log("reply", result);
     }
     function reTweet() {
-        let result = reTweet0.mutate({ id: props.id });
+        const result = reTweet0.mutate({ id: props.id });
         console.log("reTweet", result);
     }
     const [interactionState, setInteractionState] = useState({
@@ -34,11 +35,11 @@ export function TweetActions(props: TweetProps) {
     });
 
     useEffect(() => {
-        const isLiked = props.likes.some((l) => l.userId === data?.userData.id);
+        const isLiked = props.likes.some((l: Like) => l.userId === data?.userData.id);
         const isRetweeted = props.retweets.some(
-            (r) => r.userId === data?.userData.id
+            (r: Retweet) => r.userId === data?.userData.id
         );
-        const isReplied = props.replies.some((r) => r.userId === data?.userData.id);
+        const isReplied = props.replies.some((r: Reply) => r.userId === data?.userData.id);
         console.log("isr", isReplied);
 
         setInteractionState({
@@ -49,7 +50,7 @@ export function TweetActions(props: TweetProps) {
     }, []);
     return (
         <div className="flex items-center">
-            <ReplyModal tweet={props} isOpen={isOpen} closeModal={closeModal} />
+            <ReplyModal onReply={() => undefined} tweet={props} isOpen={isOpen} closeModal={closeModal} />
             <div
                 onClick={reply}
                 className={`duration-350 flex flex-1 items-center text-xs ${interactionState.replied

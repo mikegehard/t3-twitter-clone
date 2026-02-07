@@ -14,7 +14,7 @@ export const newTweet = protectedProcedure
     if (input.image) {
       imageUrl = await uploadImg(input.image);
     }
-    let newTweet = await ctx.prisma.tweet.create({
+    const newTweet = await ctx.prisma.tweet.create({
       data: {
         body: limitTextLines(input.body),
         images: [imageUrl],

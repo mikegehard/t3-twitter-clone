@@ -1,6 +1,6 @@
 import { NavItemProps } from "./NavItem";
 
-export let navItems: NavItemProps[] = [
+export const navItems: NavItemProps[] = [
     {
         href: "/",
         text: "Home",
@@ -101,5 +101,4 @@ export let navItems: NavItemProps[] = [
             </svg>
         ),
     },
-    ,
 ];

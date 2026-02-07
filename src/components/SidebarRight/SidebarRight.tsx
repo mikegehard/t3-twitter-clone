@@ -108,7 +108,7 @@ const TwitterAccount = ({
   );
 };
 
-const Loader = () => {
+const _Loader = () => {
   return (
     <div
       className={`main-border dark:border-dim-200 mx-auto w-full max-w-sm border-b border-gray-200 p-4`}
@@ -121,7 +121,7 @@ const Loader = () => {
   );
 };
 
-const TrendsForYou = () => {
+const _TrendsForYou = () => {
   return (
     <div className={`main-border sidebar-bg m-2 rounded-2xl`}>
       <h1 className="p-3 text-lg font-bold text-gray-900 dark:text-white">
@@ -135,7 +135,7 @@ const TrendsForYou = () => {
 };
 
 const WhoToFollow = () => {
-  let getTopUsers = trpc.user.topUsers.useQuery();
+  const getTopUsers = trpc.user.topUsers.useQuery();
   const [topUsers, setTopUsers] = useState(getTopUsers.data?.users);
   useEffect(() => {
     setTopUsers(getTopUsers.data?.users);
@@ -146,7 +146,7 @@ const WhoToFollow = () => {
         Who to follow
       </h1>
       {topUsers?.map((u, i) => (
-        <TwitterAccount key={i} {...u} />
+        <TwitterAccount key={i} name={u.name ?? ""} username={u.username} profileImage={u.profileImage ?? ""} badge={u.badge ?? ""} />
       ))}
     </div>
   );

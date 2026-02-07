@@ -1,38 +1,14 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { signIn } from "next-auth/react";
 import { Fragment } from "react";
-import DiscordIcon from "@icons/social/discord";
-import GithubIcon from "@icons/social/github";
-import GoogleIcon from "@icons/social/google";
-import TwitterIcon from "@icons/social/twitter";
-
-import { useForm, SubmitHandler } from "react-hook-form";
 import { TweetInput } from "@components/inputs/TweetInput";
 
-type Inputs = {
-    username: string;
-    password: string;
-};
 export default function TweetModal({
     isOpen,
     closeModal,
 }: {
     isOpen: boolean;
-    closeModal: any;
+    closeModal: () => void;
 }) {
-    const {
-        register,
-        handleSubmit,
-        watch,
-        reset,
-        formState: { errors },
-    } = useForm<Inputs>();
-
-    const onSubmit: SubmitHandler<Inputs> = (data) => {
-        console.log("cred data", data);
-        signIn("credentials", { ...data });
-        reset();
-    };
     return (
         <>
             <Transition appear show={isOpen} as={Fragment}>

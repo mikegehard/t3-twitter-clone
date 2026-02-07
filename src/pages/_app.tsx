@@ -1,16 +1,17 @@
 import { type AppType } from "next/app";
 import { Analytics } from "@vercel/analytics/react";
 import { SessionProvider } from "next-auth/react";
+import type { Session } from "next-auth";
 import Auth from "../Auth/Auth";
 import { ThemeProvider } from "next-themes";
 import { trpc } from "../utils/trpc";
 import { Toaster } from "react-hot-toast";
 import "../styles/globals.css";
 
-const MyApp: AppType = ({
+const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
-}: any) => {
+}) => {
   return (
     <SessionProvider session={session}>
       <ThemeProvider forcedTheme="dark" defaultTheme="dark" attribute="class">

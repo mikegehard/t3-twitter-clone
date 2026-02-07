@@ -1,6 +1,4 @@
 import Avatar from "@components/Avatar";
-import ArrowIcon from "@icons/tweet/Arrow";
-import { useRouter } from "next/router";
 import React from "react";
 
 export function MessageHead({

@@ -1,9 +1,7 @@
 export default function ArrowIcon({
   className,
-  pathClass,
 }: {
   className?: string;
-  pathClass?: string;
 }) {
   return (
     <svg

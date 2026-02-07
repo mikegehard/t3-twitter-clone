@@ -1,13 +1,12 @@
 /** @format */
-import { useSession, signIn, signOut } from "next-auth/react";
-import { useTheme } from "next-themes";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useState } from "react";
 import SigninModal from "@components/modals/SigninModal";
 import TwitterIcon from "@icons/social/twitter";
 
 const Auth = ({ children }: { children: ReactNode }) => {
-    const { data: session, status } = useSession();
+    const { status } = useSession();
 
     if (status === "loading") {
         return (
@@ -49,12 +48,12 @@ const Auth = ({ children }: { children: ReactNode }) => {
 export default Auth;
 
 function SignIn() {
-    let [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     function closeModal() {
         setIsOpen(false);
     }
 
-    async function signup(e: any) {
+    async function signup(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setIsOpen(!isOpen);
     }
