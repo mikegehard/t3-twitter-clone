@@ -9,7 +9,7 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 
 echo "Verifying toolchain..."
-for cmd in node npm tsc prisma; do
+for cmd in node npm tsc eslint prisma; do
   if ! command -v "$cmd" &> /dev/null; then
     echo "ERROR: $cmd not found in container"
     exit 1
