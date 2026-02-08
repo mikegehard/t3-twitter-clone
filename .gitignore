@@ -44,5 +44,10 @@ yarn-error.log*
 # worktrees
 .worktrees/
 
+# playwright
+/test-results/
+/playwright-report/
+/e2e/.auth/
+
 # agent config
 .claude/
