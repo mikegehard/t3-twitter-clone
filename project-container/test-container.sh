@@ -33,7 +33,10 @@ check_tool "npm" "npm --version" || FAILED=1
 check_tool "typescript" "tsc --version" || FAILED=1
 check_tool "eslint" "eslint --version" || FAILED=1
 check_tool "prettier" "prettier --version" || FAILED=1
+check_tool "prisma" "prisma --version" || FAILED=1
 check_tool "git" "git --version" || FAILED=1
+check_tool "python3" "python3 --version" || FAILED=1
+check_tool "make" "make --version" || FAILED=1
 
 echo ""
 if [ $FAILED -eq 0 ]; then
