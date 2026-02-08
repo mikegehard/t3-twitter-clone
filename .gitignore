@@ -40,3 +40,9 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# worktrees
+.worktrees/
+
+# agent config
+.claude/
