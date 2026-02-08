@@ -13,17 +13,17 @@ export const followUser = protectedProcedure
       },
     });
 
-    let updatedUser;
+    let _updatedUser;
     if (!existingFollow) {
       // User is not following, add new row in UserFollow and increment following count of the user and increment the followers count of the other user
-      let createRecord = await ctx.prisma.userFollow.create({
+      const _createRecord = await ctx.prisma.userFollow.create({
         data: {
           followingId: ctx.session.id,
           followerId: input.id,
         },
       });
 
-      updatedUser = await ctx.prisma.user.update({
+      _updatedUser = await ctx.prisma.user.update({
         where: { id: ctx.session.id },
         data: {
           followingCount: {
@@ -45,11 +45,11 @@ export const followUser = protectedProcedure
       });
     } else {
       // User is already following, remove the row and decrement both
-      let deleteRecord = await ctx.prisma.userFollow.delete({
+      const _deleteRecord = await ctx.prisma.userFollow.delete({
         where: { id: existingFollow.id },
       });
 
-      updatedUser = await ctx.prisma.user.update({
+      _updatedUser = await ctx.prisma.user.update({
         where: { id: ctx.session.id },
         data: {
           followingCount: {

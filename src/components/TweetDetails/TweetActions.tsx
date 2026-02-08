@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { trpc } from "@utils/trpc";
 import { useSession } from "next-auth/react";
-import { TweetProps } from "./Tweet";
+import { TweetProps } from "@types";
 import ReplyModal from "@components/modals/ReplyModal";
 
 export function TweetActions(props: TweetProps) {
-    let [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     function closeModal() {
         setIsOpen(false);
     }
 
-    let { data } = useSession();
-    let likeTweet = trpc.tweet.likeTweet.useMutation();
-    let replyTweet = trpc.tweet.replyTweet.useMutation();
-    let reTweet0 = trpc.tweet.reTweet.useMutation();
+    const { data } = useSession();
+    const likeTweet = trpc.tweet.likeTweet.useMutation();
+    const _replyTweet = trpc.tweet.replyTweet.useMutation();
+    const reTweet0 = trpc.tweet.reTweet.useMutation();
     function like() {
-        let result = likeTweet.mutate({ id: props.id });
-        console.log("like", result);
+        likeTweet.mutate({ id: props.id });
     }
     function reply() {
         setIsOpen(!isOpen);
@@ -24,8 +23,7 @@ export function TweetActions(props: TweetProps) {
         // console.log("reply", result);
     }
     function reTweet() {
-        let result = reTweet0.mutate({ id: props.id });
-        console.log("reTweet", result);
+        reTweet0.mutate({ id: props.id });
     }
     const [interactionState, setInteractionState] = useState({
         liked: false,
@@ -49,7 +47,7 @@ export function TweetActions(props: TweetProps) {
     }, []);
     return (
         <div className="flex items-center">
-            <ReplyModal tweet={props} isOpen={isOpen} closeModal={closeModal} />
+            <ReplyModal tweet={props} isOpen={isOpen} closeModal={closeModal} onReply={() => {}} />
             <div
                 onClick={reply}
                 className={`duration-350 flex flex-1 items-center text-xs ${interactionState.replied

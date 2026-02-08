@@ -4,7 +4,6 @@ import type { Tweet, User, Like, Retweet, Reply } from "@prisma/client";
 import type { Variants } from "framer-motion";
 import { Avatar } from "./Avatar";
 import ReactTextareaAutosize from "react-textarea-autosize";
-import { TweetReply } from "@components/TweetReply";
 import MainButton from "@components/MainButton";
 import { Body } from "@components/MainTweet/Body";
 import { TweetDetailsMetaData } from "./TweetDetailsMetaData";
@@ -35,13 +34,13 @@ export function TweetDetails({
   reply?: boolean;
   tweet: TweetProps;
 }) {
-  const { register, handleSubmit, watch, reset } = useForm<Inputs>();
-  let replyTweet = trpc.tweet.replyTweet.useMutation();
+  const { register, handleSubmit, watch: _watch, reset } = useForm<Inputs>();
+  const replyTweet = trpc.tweet.replyTweet.useMutation();
   const [tweetReplies, setTweetReplies] = useState(tweet.replies);
-  let session = getUserSession();
+  const session = getUserSession();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    let res = await replyTweet.mutateAsync({ id: tweet.id, body: data.body });
+    const res = await replyTweet.mutateAsync({ id: tweet.id, body: data.body });
     setTweetReplies([res.reply, ...tweetReplies]);
     reset();
   };
@@ -80,7 +79,7 @@ export function TweetDetails({
         </div>
         <div className="flex flex-col ">
           {tweetReplies.map((t) => (
-            <TweetDetailsReply tweet={t} />
+            <TweetDetailsReply tweet={{ ...t, likes: [], retweets: [], replies: [], likeCount: 0, retweetCount: 0, replyCount: 0 } as unknown as TweetProps} />
           ))}
         </div>
       </div>

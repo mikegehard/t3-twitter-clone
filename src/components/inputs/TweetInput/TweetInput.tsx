@@ -12,19 +12,19 @@ import { getUserSession } from "@hooks/getUserSession";
 type Inputs = {
   body: string;
 };
-export function TweetInput({ onPost }: { onPost?: any }) {
+export function TweetInput({ onPost }: { onPost?: (tweet: unknown) => void }) {
   const [isPosting, setIsPosting] = useState(false);
-  let session = getUserSession();
-  const [user, setUser] = useState(session);
+  const session = getUserSession();
+  const [user, _setUser] = useState(session);
   const {
     register,
     handleSubmit,
-    watch,
+    watch: _watch,
     reset,
-    formState: { errors },
+    formState: { errors: _errors },
   } = useForm<Inputs>();
-  let { data } = useSession();
-  let newTweet = trpc.tweet.newTweet.useMutation();
+  const { data: _data } = useSession();
+  const newTweet = trpc.tweet.newTweet.useMutation();
 
   const [selectedFile, setSelectedFile] = useState<string | null>();
   const onSubmit: SubmitHandler<Inputs> = (data) => {
@@ -49,9 +49,9 @@ export function TweetInput({ onPost }: { onPost?: any }) {
     event: React.ChangeEvent<HTMLInputElement>
   ) {
     if (event.target.files && event.target.files.length > 0) {
-      const selectedFile = event.target.files[0];
+      const selectedFile = event.target.files[0]!;
       //compress
-      let compressedFile = await compressFile(selectedFile, 0.7);
+      const compressedFile = await compressFile(selectedFile, 0.7);
       // Read the contents of the selected file
       console.log("imageee", compressedFile);
       const reader = new FileReader();
@@ -79,7 +79,7 @@ export function TweetInput({ onPost }: { onPost?: any }) {
       !newTweet.isError &&
       newTweet.data?.tweet
     ) {
-      onPost(newTweet.data.tweet);
+      onPost?.(newTweet.data.tweet);
       setIsPosting(false);
     }
   }, [isPosting, newTweet, onPost]);

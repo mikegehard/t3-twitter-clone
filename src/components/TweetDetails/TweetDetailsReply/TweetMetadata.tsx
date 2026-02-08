@@ -1,6 +1,5 @@
 import { useFormattedDate } from "@hooks/useFormattedDate";
 import React from "react";
-import { VerifiedIcon } from "@icons/tweet/VerifiedIcon";
 import { TweetProps } from "@types";
 import NextLink from "@components/NextLink";
 import { ColorType, PickVerificationIcon } from "@components/PickVerificationIcon";

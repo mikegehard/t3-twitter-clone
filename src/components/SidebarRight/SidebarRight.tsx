@@ -55,7 +55,7 @@ function SearchBar() {
   );
 }
 
-const TrendingTopic = ({
+const _TrendingTopic = ({
   hashtag,
   tweets,
 }: {
@@ -80,10 +80,10 @@ const TwitterAccount = ({
   profileImage,
   badge,
 }: {
-  name: string;
+  name: string | null;
   username: string;
-  profileImage: string;
-  badge: string;
+  profileImage: string | null;
+  badge: string | null;
 }) => {
   return (
     <NextLink href={"/" + username}>
@@ -92,14 +92,14 @@ const TwitterAccount = ({
       >
         <div className="flex flex-row justify-between p-2">
           <div className="flex flex-row">
-            <Avatar avatarImage={profileImage} size={48} />
+            <Avatar avatarImage={profileImage ?? undefined} size={48} />
             <div className="ml-2 flex flex-col">
               <h1 className="max-w-[100px] truncate  text-sm font-bold text-gray-900 dark:text-white">
                 {name || username}
               </h1>
               <p className="text-sm text-gray-400">@{username}</p>
             </div>
-            <PickVerificationIcon color={badge} />
+            <PickVerificationIcon color={badge ?? undefined} />
           </div>
           <MainButton className="bg-slate-700" text="Profile" />
         </div>
@@ -108,34 +108,8 @@ const TwitterAccount = ({
   );
 };
 
-const Loader = () => {
-  return (
-    <div
-      className={`main-border dark:border-dim-200 mx-auto w-full max-w-sm border-b border-gray-200 p-4`}
-    >
-      <div className="flex animate-pulse space-x-4">
-        <div className="h-4 w-3/4 rounded bg-gray-400"></div>
-        <div className="h-4 w-1/4 rounded bg-gray-400"></div>
-      </div>
-    </div>
-  );
-};
-
-const TrendsForYou = () => {
-  return (
-    <div className={`main-border sidebar-bg m-2 rounded-2xl`}>
-      <h1 className="p-3 text-lg font-bold text-gray-900 dark:text-white">
-        Trends for you
-      </h1>
-      <TrendingTopic hashtag="#FreePS5Monday" tweets="29.7K" />
-      <TrendingTopic hashtag="#BTSonGMA" tweets="351K" />
-      <TrendingTopic hashtag="#AstraZeneca" tweets="52.7K" />
-    </div>
-  );
-};
-
 const WhoToFollow = () => {
-  let getTopUsers = trpc.user.topUsers.useQuery();
+  const getTopUsers = trpc.user.topUsers.useQuery();
   const [topUsers, setTopUsers] = useState(getTopUsers.data?.users);
   useEffect(() => {
     setTopUsers(getTopUsers.data?.users);

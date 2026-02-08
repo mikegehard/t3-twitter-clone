@@ -9,24 +9,24 @@ import LikeIcon from "@icons/tweet/LikeIcon";
 import ShareIcon from "@icons/tweet/ShareIcon";
 
 export function TweetActions(props: TweetProps) {
-  let [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   function closeModal() {
     setIsOpen(false);
   }
 
-  let { data } = useSession();
-  let likeTweet = trpc.tweet.likeTweet.useMutation();
-  let replyTweet = trpc.tweet.replyTweet.useMutation();
-  let reTweet0 = trpc.tweet.reTweet.useMutation();
+  const { data } = useSession();
+  const likeTweet = trpc.tweet.likeTweet.useMutation();
+  const _replyTweet = trpc.tweet.replyTweet.useMutation();
+  const reTweet0 = trpc.tweet.reTweet.useMutation();
   function like() {
-    let result = likeTweet.mutate({ id: props.id });
+    likeTweet.mutate({ id: props.id });
   }
   function reply() {
     setIsOpen(!isOpen);
     // let result = replyTweet.mutate({ id: props.id, body: "test" });
   }
   function reTweet() {
-    let result = reTweet0.mutate({ id: props.id });
+    reTweet0.mutate({ id: props.id });
   }
   const [interactionState, setInteractionState] = useState({
     liked: false,
@@ -49,7 +49,7 @@ export function TweetActions(props: TweetProps) {
   }, []);
   return (
     <>
-      <ReplyModal tweet={props} isOpen={isOpen} closeModal={closeModal} />
+      <ReplyModal tweet={props} isOpen={isOpen} closeModal={closeModal} onReply={() => {}} />
       <div
         onClick={reply}
         className={`duration-350 flex flex-1 items-center text-xs ${

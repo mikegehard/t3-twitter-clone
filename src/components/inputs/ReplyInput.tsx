@@ -1,7 +1,6 @@
 import React from "react";
 import ReactTextareaAutosize from "react-textarea-autosize";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { trpc } from "@utils/trpc";
 import Avatar from "@components/Avatar";
 import { getUserSession } from "@hooks/getUserSession";
 
@@ -9,24 +8,24 @@ type Inputs = {
   body: string;
 };
 type InputProps = {
-  onReply: any;
+  onReply: (body: string) => void;
   hideAvatar?: boolean;
   minH?: number;
 };
-let avatarSize = 56;
+const avatarSize = 56;
 export function ReplyInput({ onReply, hideAvatar, minH = 80 }: InputProps) {
   const {
     register,
     handleSubmit,
-    watch,
+    watch: _watch,
     reset,
-    formState: { errors },
+    formState: { errors: _errors },
   } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     onReply(data.body);
     reset();
   };
-    let session = getUserSession()
+    const session = getUserSession()
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col ">
       <div className="flex gap-2 ">

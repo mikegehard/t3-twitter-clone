@@ -7,7 +7,7 @@ import { getUserSession } from "@hooks/getUserSession";
 import { useRouter } from "next/router";
 
 const ProfilePage: NextPage = () => {
-  let session = getUserSession();
+  const session = getUserSession();
   const router = useRouter();
   const { username } = router.query as { username: string };
   return (
@@ -15,7 +15,7 @@ const ProfilePage: NextPage = () => {
       <SEO title="Twitter" />
       <div className="mx-auto ">
         <div className="flex  flex-row justify-center">
-          <SidebarLeft active={session.username === username&&6} />
+          <SidebarLeft active={session.username === username ? 6 : undefined} />
           <ProfileContent />
           <SidebarRight />
         </div>

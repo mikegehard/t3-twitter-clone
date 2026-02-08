@@ -11,7 +11,7 @@ export const Counter: React.FC<PropsType> = ({ num }) => {
   const [initial, setInitial] = useState(false);
 
   useEffect(() => {
-    initial && handleValueChange(num);
+    if (initial) { handleValueChange(num); }
     setInitial(true);
   }, [num]);
 

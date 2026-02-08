@@ -32,7 +32,7 @@ export const userRouter = t.router({
         })
     )
     .mutation(async ({ input, ctx }) => {
-      let user = await ctx.prisma.user.update({
+      const user = await ctx.prisma.user.update({
         where: { id: ctx.session.id },
         data: {
           ...input,
@@ -52,7 +52,7 @@ export const userRouter = t.router({
         })
     )
     .query(async ({ input, ctx }) => {
-      let user = await ctx.prisma.user.findFirst({
+      const user = await ctx.prisma.user.findFirst({
         where: {
           OR: [{ id: input.id! }, { username: input.username! }],
         },
@@ -123,7 +123,7 @@ export const userRouter = t.router({
       //     data: "Invalid request",
       //     code: "BAD_REQUEST",
       //   });
-      let existingUser = await ctx.prisma.user.findFirst({
+      const existingUser = await ctx.prisma.user.findFirst({
         where: {
           OR: [{ email: input.email }, { username: input.username }],
         },
@@ -131,8 +131,7 @@ export const userRouter = t.router({
 
       // if no user and it's not credentials just sign up via provider
       if (input.provider !== "credentials" && !existingUser) {
-        let user = await ctx.prisma.user.create({
-          // @ts-ignore
+        const user = await ctx.prisma.user.create({
           data: {
             ...input,
           },
@@ -146,8 +145,7 @@ export const userRouter = t.router({
       // if no user and provider is credentials just sign up
       if (!existingUser && input.provider === "credentials") {
         // Create a new user
-        let user = await ctx.prisma.user.create({
-          // @ts-ignore the input is already validated above no worries
+        const user = await ctx.prisma.user.create({
           data: {
             ...input,
             password: bcrypt.hashSync(input.password!, 10), // hash the password
@@ -194,7 +192,7 @@ export const userRouter = t.router({
   updateImg,
   updateBadge,
   topUsers: protectedProcedure.query(async ({ ctx }) => {
-    let users = await ctx.prisma.user.findMany({
+    const users = await ctx.prisma.user.findMany({
       orderBy: { followersCount: "desc" },
       take: 3,
     });

@@ -1,23 +1,24 @@
-import React, { useEffect, useRef, useState } from "react";
-import { TweetInput } from "@components/inputs/TweetInput";
+import React, { useEffect, useState } from "react";
 import { trpc } from "@utils/trpc";
 import { Spinner } from "@components/Spinner";
-import { NewTweets } from "@components/NewTweets";
 import { PageHead } from "@components/PageHead";
 import MainTweet from "@components/MainTweet";
 
 export default function BookmarksContent() {
-  let allTweets = trpc.tweet.getAllTweets.useQuery({ id: "anysddssdss" });
+  const allTweets = trpc.tweet.getAllTweets.useMutation();
   const [tweets, setTweets] = useState(allTweets.data?.tweets);
   console.log("tweetssss", tweets, allTweets.data);
+  useEffect(() => {
+    allTweets.mutate({ skip: 0 });
+  }, []);
   useEffect(() => {
     setTweets(allTweets.data?.tweets);
   }, [allTweets.data]);
 
-  function onPost(body: string) {
-    const newTweet = {
+  function _onPost(_body: string) {
+    const _newTweet = {
       username: "new",
-      body,
+      body: _body,
       name: "Test test",
       id: Date.now(),
     };

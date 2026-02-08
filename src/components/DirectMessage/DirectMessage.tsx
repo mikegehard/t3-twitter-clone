@@ -1,4 +1,3 @@
-import Avatar from "@components/Avatar";
 import { MessageHead } from "./Messagehead";
 import { MessageInput } from "./MessageInput";
 
@@ -20,7 +19,7 @@ export default function DirectMessage() {
   );
 }
 
-let body = `
+const body = `
 adssdsdsadjhasd dashasdgdash sdahdshagd asdhhg asdddddddddhj 
 `;
 function MessageBody() {

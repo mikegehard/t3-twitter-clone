@@ -27,17 +27,17 @@ export default function EditProfileModal({
 }: {
   isOpen: boolean;
   closeModal: () => void;
-  onSave: any;
+  onSave: (user: User) => void;
   user: User;
 }) {
   const {
     register,
     handleSubmit,
-    watch,
-    reset,
-    formState: { errors },
+    watch: _watch,
+    reset: _reset,
+    formState: { errors: _errors },
   } = useForm<Inputs>();
-  let session = getUserSession();
+  const _session = getUserSession();
   const [profileImg, setProfileImg] = useState<string | null>();
   const [bgImg, setBgImg] = useState<string | null>();
 
@@ -56,9 +56,9 @@ export default function EditProfileModal({
   }
   async function handleBgSelection(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files && event.target.files.length > 0) {
-      const selectedFile = event.target.files[0];
+      const selectedFile = event.target.files[0]!;
       //compress
-      let compressedFile = await compressFile(selectedFile, 0.7);
+      const compressedFile = await compressFile(selectedFile, 0.7);
       // Read the contents of the selected file
       const reader = new FileReader();
       reader.readAsDataURL(compressedFile);
@@ -75,9 +75,9 @@ export default function EditProfileModal({
     event: React.ChangeEvent<HTMLInputElement>
   ) {
     if (event.target.files && event.target.files.length > 0) {
-      const selectedFile = event.target.files[0];
+      const selectedFile = event.target.files[0]!;
       //compress
-      let compressedFile = await compressFile(selectedFile, 0.7);
+      const compressedFile = await compressFile(selectedFile, 0.7);
       // Read the contents of the selected file
       const reader = new FileReader();
       reader.readAsDataURL(compressedFile);
@@ -91,11 +91,11 @@ export default function EditProfileModal({
     }
   }
 
-  let updateProfile = trpc.user.updateUser.useMutation();
-  let updateProfileImg = trpc.user.updateImg.useMutation();
+  const updateProfile = trpc.user.updateUser.useMutation();
+  const updateProfileImg = trpc.user.updateImg.useMutation();
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    let res = await updateProfile.mutateAsync({ ...data });
-    let resImg = await updateProfileImg.mutateAsync({ bgImg, profileImg });
+    const res = await updateProfile.mutateAsync({ ...data });
+    const _resImg = await updateProfileImg.mutateAsync({ bgImg, profileImg });
     onSave(res.user);
     await updateSession();
     closeModal();

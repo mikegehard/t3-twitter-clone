@@ -2,7 +2,6 @@ import { SEO } from "@components/SEO";
 import { type NextPage } from "next";
 import SidebarLeft from "@components/SidebarLeft";
 import DirectMessage from "@components/DirectMessage";
-import MessagesContent from "@components/pageComponents/messages/MessagesContent";
 import SettingsContent from "@components/pageComponents/settings/SettingsContent";
 
 const Home: NextPage = () => {

@@ -1,10 +1,5 @@
 import React from "react";
 import * as Menubar from "@radix-ui/react-menubar";
-import {
-  CheckIcon,
-  ChevronRightIcon,
-  DotFilledIcon,
-} from "@radix-ui/react-icons";
 import { TweetMetadata } from "@components/TweetDetails/TweetMetadata";
 import { getUserSession } from "@hooks/getUserSession";
 import Avatar from "@components/Avatar";
@@ -12,16 +7,16 @@ import MainButton from "@components/MainButton";
 import { trpc } from "@utils/trpc";
 import updateSession from "@utils/updateSession";
 
-const COLORS: any[] = ["blue", "red", "gold", "gray"];
+const COLORS: string[] = ["blue", "red", "gold", "gray"];
 
-const VerifiedDropdown = ({ closeModal }: { closeModal: any }) => {
-  let session = getUserSession();
-  const [radioSelection, setRadioSelection] = React.useState<any>(
-    session.badge
+const VerifiedDropdown = ({ closeModal }: { closeModal: () => void }) => {
+  const session = getUserSession();
+  const [radioSelection, setRadioSelection] = React.useState<string | undefined>(
+    session.badge ?? undefined
   );
-  let updateBadge = trpc.user.updateBadge.useMutation();
+  const updateBadge = trpc.user.updateBadge.useMutation();
   async function update() {
-    updateBadge.mutateAsync({ badge: radioSelection });
+    updateBadge.mutateAsync({ badge: radioSelection ?? "" });
     updateSession();
     closeModal();
   }

@@ -11,7 +11,7 @@ export function UserMetadata({
     username: string;
     name: string;
     profileImage: string;
-    badge: any;
+    badge: string | null;
   };
 }) {
   return (
@@ -24,7 +24,7 @@ export function UserMetadata({
           <div className="flex flex-col items-start">
             <p className="flex items-center text-base font-medium leading-6 text-gray-800 dark:text-white">
               {user.name || user.username}
-              <PickVerificationIcon color={user.badge} />
+              <PickVerificationIcon color={user.badge ?? undefined} />
             </p>
             <span className="text-secondary text-sm font-medium leading-5 transition duration-150 ease-in-out group-hover:text-gray-300">
               @{user.username}

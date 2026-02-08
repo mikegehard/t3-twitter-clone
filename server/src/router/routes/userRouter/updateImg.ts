@@ -5,7 +5,7 @@ import { uploadImg } from "../../../utils/uploadImg";
 export const updateImg = protectedProcedure
   .input(z.object({ bgImg: z.string().nullish(), profileImg: z.string().nullish() }))
   .mutation(async ({ ctx, input }) => {
-    let currentUser = await ctx.prisma.user.findUnique({
+    const currentUser = await ctx.prisma.user.findUnique({
       where: { id: ctx.session.id },
     });
 
@@ -13,14 +13,14 @@ export const updateImg = protectedProcedure
     if (input.bgImg) {
       bgImage = await uploadImg(input.bgImg);
     } else {
-      bgImage = currentUser?.bgImage!;
+      bgImage = currentUser?.bgImage ?? "";
     }
 
     let profileImage = "";
     if (input.profileImg) {
       profileImage = await uploadImg(input.profileImg);
     } else {
-      profileImage = currentUser?.profileImage!;
+      profileImage = currentUser?.profileImage ?? "";
     }
 
     await ctx.prisma.user.update({

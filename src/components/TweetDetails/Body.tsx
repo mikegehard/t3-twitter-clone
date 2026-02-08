@@ -1,5 +1,5 @@
 import React from "react";
-import { TweetProps } from "./Tweet";
+import { TweetProps } from "@types";
 
 export function Body(props: TweetProps) {
   return (

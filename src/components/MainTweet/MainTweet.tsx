@@ -4,7 +4,6 @@ import type { Variants } from "framer-motion";
 import { TweetMetadata } from "./TweetMetadata";
 import { Body } from "./Body";
 import { TweetActions } from "./TweetActions";
-import Link from "next/link";
 import NextLink from "@components/NextLink";
 import Avatar from "@components/Avatar";
 import { TweetProps } from "@types";
@@ -34,7 +33,7 @@ export function MainTweet({
           </div>
           <div className="flex w-full grow flex-col">
             <NextLink href={`/${tweet.user.username}`}>
-              <TweetMetadata color={tweet.user.badge} {...tweet} />
+              <TweetMetadata color={tweet.user.badge ?? undefined} {...tweet} />
             </NextLink>
             <Body {...tweet} />
             <TweetActions {...tweet} />

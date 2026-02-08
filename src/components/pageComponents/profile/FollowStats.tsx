@@ -1,6 +1,6 @@
 import NextLink from "@components/NextLink";
 
-export function FollowStats({ username ,following,  followers}: { username: string,followers:number,following:number }) {
+export function FollowStats({ username ,following,  followers}: { username: string,followers:number | undefined,following:number | undefined }) {
   return (
     <div className="flex w-full items-start justify-start divide-gray-800 pt-3">
       <div className="pr-3 text-center">

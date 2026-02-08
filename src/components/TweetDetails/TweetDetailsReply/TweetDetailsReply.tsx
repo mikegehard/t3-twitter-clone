@@ -2,7 +2,6 @@ import React from "react";
 
 import type { Variants } from "framer-motion";
 import { TweetMetadata } from "./TweetMetadata";
-import Link from "next/link";
 import NextLink from "@components/NextLink";
 import Avatar from "@components/Avatar";
 import { TweetProps } from "@types";

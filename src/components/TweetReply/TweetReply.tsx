@@ -1,8 +1,5 @@
 import React from "react";
-import cn from "clsx";
 import type { Tweet, User, Like, Retweet, Reply } from "@prisma/client";
-
-import { AnimatePresence, motion } from "framer-motion";
 
 import type { Variants } from "framer-motion";
 import { TweetMetadata } from "./TweetMetadata";
@@ -10,7 +7,6 @@ import { Body } from "./Body";
 import { TweetActions } from "./TweetActions";
 import Link from "next/link";
 import { Avatar } from "./Avatar";
-import { useSession } from "next-auth/react";
 import NextLink from "@components/NextLink";
 
 export const variants: Variants = {

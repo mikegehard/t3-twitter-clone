@@ -10,10 +10,10 @@ export const likeTweet = protectedProcedure
         tweetId: input.id,
       },
     });
-    let updatedTweet;
+    let _updatedTweet;
 
     if (!existingLike) {
-      updatedTweet = await ctx.prisma.tweet.update({
+      _updatedTweet = await ctx.prisma.tweet.update({
         where: { id: input.id },
         data: {
           likeCount: { increment: 1 },
@@ -28,7 +28,7 @@ export const likeTweet = protectedProcedure
         },
       });
     } else {
-      updatedTweet = await ctx.prisma.tweet.update({
+      _updatedTweet = await ctx.prisma.tweet.update({
         where: { id: input.id },
         data: {
           likeCount: { decrement: 1 },
@@ -49,7 +49,7 @@ export const likeTweet = protectedProcedure
 export const replyTweet = protectedProcedure
   .input(z.object({ id: z.string().uuid(), body: z.string().min(1) }))
   .mutation(async ({ ctx, input }) => {
-    const [reply, tweet] = await ctx.prisma.$transaction([
+    const [reply, _tweet] = await ctx.prisma.$transaction([
       ctx.prisma.reply.create({
         data: {
           body: input.body,

@@ -51,9 +51,9 @@ export function authOptions(update?: boolean): NextAuthOptions {
         let success = false;
         let body = {};
         if (!p.credentials) {
-          let provider = p.account?.provider;
-          let username = p.user.name?.replace(/\s/g, "")
-          let email = p.user.email;
+          const provider = p.account?.provider;
+          const username = p.user.name?.replace(/\s/g, "")
+          const email = p.user.email;
           body = {
             provider,
             username,
@@ -68,25 +68,25 @@ export function authOptions(update?: boolean): NextAuthOptions {
           };
         }
         try {
-          // @ts-ignore
-          let createUser = await client.user.createUser.mutate({ ...body });
+          // @ts-expect-error trpc client type mismatch
+          const createUser = await client.user.createUser.mutate({ ...body });
           success = createUser.success;
-          let userData = createUser.data;
+          const userData = createUser.data;
           if (typeof createUser.data === "string") {
             throw new Error(createUser.data);
           }
-          // @ts-ignore
+          // @ts-expect-error next-auth type override
           p.user.userData = userData;
-        } catch (e: any) {}
+        } catch {}
         return success;
       },
 
       async jwt(p) {
         if (update) {
-          let { user } = await client.user.getUser.query({
+          const { user } = await client.user.getUser.query({
             id: p.token.userData.id,
           });
-          //@ts-ignore
+          // @ts-expect-error next-auth type override
           p.token.userData = user;
         } else {
           p.token.userData = p.user?.userData || p.token.userData;
@@ -96,10 +96,10 @@ export function authOptions(update?: boolean): NextAuthOptions {
       },
       async session(p) {
         if (update) {
-          let { user } = await client.user.getUser.query({
+          const { user } = await client.user.getUser.query({
             id: p.token.userData.id,
           });
-          //@ts-ignore
+          // @ts-expect-error next-auth type override
           p.session.userData = user;
         } else {
           p.session.userData = p.token.userData;
@@ -110,13 +110,13 @@ export function authOptions(update?: boolean): NextAuthOptions {
     providers: getProviders(),
     jwt: {
       async encode(p) {
-        let token = jwt.sign(p.token!, p.secret);
+        const token = jwt.sign(p.token!, p.secret);
         return token;
       },
-      // @ts-ignore
+      // @ts-expect-error jwt decode return type mismatch
       async decode(p) {
-        // @ts-ignore
-        let decoded = jwt.verify(p.token, p.secret);
+        // @ts-expect-error jwt params possibly undefined
+        const decoded = jwt.verify(p.token, p.secret);
         return decoded;
       },
     },
@@ -164,10 +164,10 @@ function getProviders() {
             password: credentials.password,
           };
         }
-        // @ts-ignore
-        let createUser = await client.user.createUser.mutate({ ...body });
-        // @ts-ignore
-        let userData: User = { userData: createUser.data };
+        // @ts-expect-error trpc client type mismatch
+        const createUser = await client.user.createUser.mutate({ ...body });
+        // @ts-expect-error next-auth user type override
+        const userData: User = { userData: createUser.data };
         if (typeof createUser.data === "string") {
           throw new Error(createUser.data);
         }
@@ -178,7 +178,7 @@ function getProviders() {
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  // @ts-ignore
+  // @ts-expect-error query param type mismatch
   return await NextAuth(req, res, authOptions(req?.query?.update));
 };
 export default handler;

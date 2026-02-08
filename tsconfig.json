@@ -22,9 +22,8 @@
       "@hooks/*": ["hooks/*"],
       "@icons/*": ["icons/*"],
       "@context/*": ["context/*"],
-      "@utils/*": ["./utils/*"],
-    },
-    "incremental": true
+      "@utils/*": ["./utils/*"]
+    }
   },
   "include": [
     "next-env.d.ts",
