@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  ci:
+    name: CI Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate .env with dummy values for build-time steps
+        run: |
+          if [ -f .env.example ]; then
+            while IFS= read -r line; do
+              [[ "$line" =~ ^[[:space:]]*# || -z "$line" ]] && continue
+              var="${line%%=*}"
+              case "$var" in
+                *DATABASE_URL*|*DB_URL*) echo "${var}=postgresql://user:pass@localhost:5432/placeholder" ;;
+                *REDIS_URL*) echo "${var}=redis://localhost:6379" ;;
+                *_URL*|*URL|*_SERVER|*_ENDPOINT) echo "${var}=https://placeholder.example.com" ;;
+                *SECRET*|*TOKEN*|*KEY*|*PASSWORD*) echo "${var}=placeholder-secret" ;;
+                *_PORT) echo "${var}=3000" ;;
+                *) echo "${var}=placeholder" ;;
+              esac
+            done < .env.example > .env
+          fi
+
+      - name: Run CI checks in devcontainer
+        uses: devcontainers/ci@v0.3
+        with:
+          configFile: .devcontainer/ci/devcontainer.json
+          runCmd: ./scripts/ci-loop-check.sh
